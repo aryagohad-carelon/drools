@@ -1,18 +1,71 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import type { Restaurant, AddRecommendationInput } from '../types'
-import { SEED_RESTAURANTS } from '../data/seed'
+import type { DbRecommendation } from '../types/database'
+import { supabase } from '../lib/supabase'
+
+// Fallback image used for all DB-submitted restaurants (no photo storage yet)
+const FALLBACK_IMAGE =
+  'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format'
+
+function daysAgoFromDate(dateStr: string): number {
+  const ms = Date.now() - new Date(dateStr).getTime()
+  return Math.floor(ms / (1000 * 60 * 60 * 24))
+}
+
+function dbRowToRestaurant(row: DbRecommendation): Restaurant {
+  return {
+    id: row.id,
+    name: row.restaurant_name,
+    area: row.area,
+    cuisine: row.cuisine.length > 0 ? row.cuisine : ['Other'],
+    image: FALLBACK_IMAGE,
+    aiSummary: row.recommendation,
+    contributor: {
+      id: `user-${row.recommended_by}`,
+      name: row.recommended_by,
+      avatar: '',
+    },
+    likes: 0,
+    liked: false,
+    daysAgo: daysAgoFromDate(row.created_at),
+    communityRecs: [],
+  }
+}
 
 interface RestaurantContextValue {
   restaurants: Restaurant[]
+  loading: boolean
+  error: string | null
   toggleLike: (restaurantId: string) => void
   toggleRecLike: (restaurantId: string, recId: string) => void
-  addRestaurant: (input: AddRecommendationInput) => string
+  addRestaurant: (input: AddRecommendationInput) => Promise<string>
 }
 
 const RestaurantContext = createContext<RestaurantContextValue | null>(null)
 
 export function RestaurantProvider({ children }: { children: React.ReactNode }) {
-  const [restaurants, setRestaurants] = useState<Restaurant[]>(SEED_RESTAURANTS)
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    supabase
+      .from('recommendations')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .then(({ data, error: err }) => {
+        if (cancelled) return
+        if (err) {
+          setError(err.message)
+        } else {
+          setRestaurants((data ?? []).map(dbRowToRestaurant))
+        }
+        setLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [])
 
   const toggleLike = useCallback((restaurantId: string) => {
     setRestaurants((prev) =>
@@ -40,31 +93,28 @@ export function RestaurantProvider({ children }: { children: React.ReactNode }) 
     )
   }, [])
 
-  const addRestaurant = useCallback((input: AddRecommendationInput): string => {
-    const newId = `new-${Date.now()}`
-    const newRestaurant: Restaurant = {
-      id: newId,
-      name: input.restaurantName,
-      area: input.area,
-      cuisine: input.cuisine.length > 0 ? input.cuisine : ['Other'],
-      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format',
-      aiSummary: input.recommendationText,
-      contributor: {
-        id: `user-${Date.now()}`,
-        name: input.recommendedBy || 'Anonymous',
-        avatar: '',
-      },
-      likes: 1,
-      liked: true,
-      daysAgo: 0,
-      communityRecs: [],
-    }
+  const addRestaurant = useCallback(async (input: AddRecommendationInput): Promise<string> => {
+    const { data, error: err } = await supabase
+      .from('recommendations')
+      .insert({
+        restaurant_name: input.restaurantName,
+        area: input.area,
+        cuisine: input.cuisine,
+        recommendation: input.recommendationText,
+        recommended_by: input.recommendedBy,
+      })
+      .select()
+      .single()
+
+    if (err || !data) throw new Error(err?.message ?? 'Failed to save recommendation')
+
+    const newRestaurant = dbRowToRestaurant(data as DbRecommendation)
     setRestaurants((prev) => [newRestaurant, ...prev])
-    return newId
+    return newRestaurant.id
   }, [])
 
   return (
-    <RestaurantContext.Provider value={{ restaurants, toggleLike, toggleRecLike, addRestaurant }}>
+    <RestaurantContext.Provider value={{ restaurants, loading, error, toggleLike, toggleRecLike, addRestaurant }}>
       {children}
     </RestaurantContext.Provider>
   )

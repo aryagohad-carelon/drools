@@ -1,8 +1,7 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRestaurants } from '../context/RestaurantContext'
 import { CUISINE_FILTERS, AREAS } from '../constants'
-import { TRENDING_IDS } from '../data/seed'
 import SearchBar from '../components/ui/SearchBar'
 import FilterChip from '../components/ui/FilterChip'
 import Avatar from '../components/ui/Avatar'
@@ -13,24 +12,15 @@ import NoResults from '../components/states/NoResults'
 
 export default function HomeFeed() {
   const navigate = useNavigate()
-  const { restaurants, toggleLike } = useRestaurants()
+  const { restaurants, loading, toggleLike } = useRestaurants()
 
-  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCuisine, setActiveCuisine] = useState('All')
   const [activeArea, setActiveArea] = useState('')
 
-  // Simulate initial load
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 900)
-    return () => clearTimeout(t)
-  }, [])
-
+  // Trending = the 5 most-liked entries from the live feed
   const trendingRestaurants = useMemo(
-    () =>
-      TRENDING_IDS.map((id) => restaurants.find((r) => r.id === id)).filter(
-        Boolean
-      ) as typeof restaurants,
+    () => [...restaurants].sort((a, b) => b.likes - a.likes).slice(0, 5),
     [restaurants]
   )
 
