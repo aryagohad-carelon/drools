@@ -9,6 +9,7 @@ export interface Database {
           cuisine: string[]
           recommendation: string
           recommended_by: string
+          photo_url: string | null
           created_at: string
         }
         Insert: {
@@ -18,6 +19,7 @@ export interface Database {
           cuisine?: string[]
           recommendation: string
           recommended_by: string
+          photo_url?: string | null
           created_at?: string
         }
         Update: Partial<Database['public']['Tables']['recommendations']['Insert']>

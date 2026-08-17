@@ -3,7 +3,7 @@ import type { Restaurant, AddRecommendationInput } from '../types'
 import type { DbRecommendation } from '../types/database'
 import { supabase } from '../lib/supabase'
 
-// Fallback image used for all DB-submitted restaurants (no photo storage yet)
+// Fallback image used when a restaurant has no uploaded photo
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format'
 
@@ -18,7 +18,7 @@ function dbRowToRestaurant(row: DbRecommendation): Restaurant {
     name: row.restaurant_name,
     area: row.area,
     cuisine: row.cuisine.length > 0 ? row.cuisine : ['Other'],
-    image: FALLBACK_IMAGE,
+    image: row.photo_url ?? FALLBACK_IMAGE,
     aiSummary: row.recommendation,
     contributor: {
       id: `user-${row.recommended_by}`,
@@ -94,6 +94,19 @@ export function RestaurantProvider({ children }: { children: React.ReactNode }) 
   }, [])
 
   const addRestaurant = useCallback(async (input: AddRecommendationInput): Promise<string> => {
+    // Upload photo to Storage if provided
+    let photoUrl: string | null = null
+    if (input.photo) {
+      const ext = input.photo.name.split('.').pop() ?? 'jpg'
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: uploadErr } = await supabase.storage
+        .from('restaurant-photos')
+        .upload(path, input.photo, { contentType: input.photo.type, upsert: false })
+      if (uploadErr) throw new Error(`Photo upload failed: ${uploadErr.message}`)
+      const { data: urlData } = supabase.storage.from('restaurant-photos').getPublicUrl(path)
+      photoUrl = urlData.publicUrl
+    }
+
     const { data, error: err } = await supabase
       .from('recommendations')
       .insert({
@@ -102,6 +115,7 @@ export function RestaurantProvider({ children }: { children: React.ReactNode }) 
         cuisine: input.cuisine,
         recommendation: input.recommendationText,
         recommended_by: input.recommendedBy,
+        photo_url: photoUrl,
       })
       .select()
       .single()
