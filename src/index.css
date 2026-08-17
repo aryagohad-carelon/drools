@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+:root {
+  --accent: #B5224A;
+  --accent-bg: rgba(181, 34, 74, 0.09);
+  --bg: #FFF9F3;
+  --text: #2A211E;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Heart like animation */
+@keyframes like-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.like-pop {
+  animation: like-pop 0.35s ease;
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #EDE0D2 25%, #F5EDE4 50%, #EDE0D2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
