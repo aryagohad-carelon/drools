@@ -5,11 +5,12 @@ import { CUISINE_FILTERS, AREAS } from '../../constants'
 interface AddRecommendationFormProps {
   onSubmit: (input: AddRecommendationInput) => void
   onCancel?: () => void
+  submitting?: boolean
 }
 
 const CUISINE_OPTIONS = CUISINE_FILTERS.filter((c) => c !== 'All')
 
-export default function AddRecommendationForm({ onSubmit, onCancel }: AddRecommendationFormProps) {
+export default function AddRecommendationForm({ onSubmit, onCancel, submitting = false }: AddRecommendationFormProps) {
   const [form, setForm] = useState<AddRecommendationInput>({
     restaurantName: '',
     area: '',
@@ -19,11 +20,34 @@ export default function AddRecommendationForm({ onSubmit, onCancel }: AddRecomme
     photo: null,
   })
   const [errors, setErrors] = useState<Partial<Record<keyof AddRecommendationInput, string>>>({})
+
+  // Area: track whether "Other" is selected
+  const [areaSelect, setAreaSelect] = useState('')
+  const [customArea, setCustomArea] = useState('')
+
+  // Cuisine: custom tag input
+  const [cuisineInput, setCuisineInput] = useState('')
+
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   function set<K extends keyof AddRecommendationInput>(key: K, value: AddRecommendationInput[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
     setErrors((prev) => ({ ...prev, [key]: undefined }))
+  }
+
+  function handleAreaSelect(val: string) {
+    setAreaSelect(val)
+    if (val !== '__other__') {
+      setCustomArea('')
+      set('area', val)
+    } else {
+      set('area', '')
+    }
+  }
+
+  function handleCustomArea(val: string) {
+    setCustomArea(val)
+    set('area', val.trim())
   }
 
   function toggleCuisine(tag: string) {
@@ -33,10 +57,27 @@ export default function AddRecommendationForm({ onSubmit, onCancel }: AddRecomme
     )
   }
 
+  function addCustomCuisine() {
+    const tag = cuisineInput.trim()
+    if (!tag || form.cuisine.includes(tag)) {
+      setCuisineInput('')
+      return
+    }
+    set('cuisine', [...form.cuisine, tag])
+    setCuisineInput('')
+  }
+
+  function handleCuisineInputKey(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addCustomCuisine()
+    }
+  }
+
   function validate(): boolean {
     const newErrors: typeof errors = {}
     if (!form.restaurantName.trim()) newErrors.restaurantName = 'Restaurant name is required'
-    if (!form.area) newErrors.area = 'Please select an area'
+    if (!form.area.trim()) newErrors.area = 'Please select or enter an area'
     if (!form.recommendationText.trim()) newErrors.recommendationText = 'Tell us why people should try it'
     if (!form.recommendedBy.trim()) newErrors.recommendedBy = 'Please add your name'
     setErrors(newErrors)
@@ -64,19 +105,30 @@ export default function AddRecommendationForm({ onSubmit, onCancel }: AddRecomme
       {/* Area */}
       <Field label="Area" error={errors.area} required>
         <select
-          value={form.area}
-          onChange={(e) => set('area', e.target.value)}
-          className={inputClass(!!errors.area)}
+          value={areaSelect}
+          onChange={(e) => handleAreaSelect(e.target.value)}
+          className={inputClass(!!errors.area && areaSelect !== '__other__')}
         >
           <option value="">Select an area...</option>
           {AREAS.map((a) => (
             <option key={a} value={a}>{a}</option>
           ))}
+          <option value="__other__">Other (type below)</option>
         </select>
+        {areaSelect === '__other__' && (
+          <input
+            type="text"
+            value={customArea}
+            onChange={(e) => handleCustomArea(e.target.value)}
+            placeholder="Type your area..."
+            autoFocus
+            className={`${inputClass(!!errors.area && !customArea.trim())} mt-2`}
+          />
+        )}
       </Field>
 
       {/* Cuisine */}
-      <Field label="Cuisine" hint="Select all that apply">
+      <Field label="Cuisine" hint="Select all that apply, or add your own">
         <div className="flex flex-wrap gap-2 mt-1">
           {CUISINE_OPTIONS.map((tag) => {
             const selected = form.cuisine.includes(tag)
@@ -95,6 +147,42 @@ export default function AddRecommendationForm({ onSubmit, onCancel }: AddRecomme
               </button>
             )
           })}
+          {/* Custom cuisine tags added by the user */}
+          {form.cuisine
+            .filter((c) => !(CUISINE_OPTIONS as readonly string[]).includes(c))
+            .map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => toggleCuisine(tag)}
+                className="px-3 py-1.5 rounded-full text-sm font-medium transition-all border bg-[#B5224A] text-white border-[#B5224A] flex items-center gap-1.5"
+              >
+                {tag}
+                <svg className="w-3 h-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            ))}
+        </div>
+
+        {/* Custom cuisine input */}
+        <div className="flex gap-2 mt-3">
+          <input
+            type="text"
+            value={cuisineInput}
+            onChange={(e) => setCuisineInput(e.target.value)}
+            onKeyDown={handleCuisineInputKey}
+            placeholder="Add a cuisine..."
+            className="flex-1 px-3 py-2 bg-white rounded-xl border border-[#EDE0D2] text-sm text-[#2A211E] placeholder:text-[#C2AFA7] focus:outline-none focus:border-[#B5224A] focus:ring-2 focus:ring-[rgba(181,34,74,0.15)] transition-all"
+          />
+          <button
+            type="button"
+            onClick={addCustomCuisine}
+            disabled={!cuisineInput.trim()}
+            className="px-3 py-2 rounded-xl border border-[#EDE0D2] text-sm font-medium text-[#B5224A] bg-white hover:bg-[rgba(181,34,74,0.06)] hover:border-[#B5224A] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Add
+          </button>
         </div>
       </Field>
 
@@ -161,9 +249,10 @@ export default function AddRecommendationForm({ onSubmit, onCancel }: AddRecomme
       <div className="flex flex-col gap-3 pt-2">
         <button
           type="submit"
-          className="w-full py-3.5 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm hover:bg-[#9B1C3D] transition-colors shadow-sm active:scale-[0.98]"
+          disabled={submitting}
+          className="w-full py-3.5 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm hover:bg-[#9B1C3D] transition-colors shadow-sm active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Share Recommendation
+          {submitting ? 'Saving...' : 'Share Recommendation'}
         </button>
         {onCancel && (
           <button

@@ -9,10 +9,20 @@ export default function AddRecommendation() {
   const navigate = useNavigate()
   const { addRestaurant } = useRestaurants()
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  function handleSubmit(input: AddRecommendationInput) {
-    addRestaurant(input)
-    setSubmitted(true)
+  async function handleSubmit(input: AddRecommendationInput) {
+    setSubmitting(true)
+    setSubmitError(null)
+    try {
+      await addRestaurant(input)
+      setSubmitted(true)
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -48,9 +58,15 @@ export default function AddRecommendation() {
 
       {/* Form */}
       <div className="px-5 pb-8">
+        {submitError && (
+          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-600">
+            {submitError}
+          </div>
+        )}
         <AddRecommendationForm
           onSubmit={handleSubmit}
           onCancel={() => navigate(-1)}
+          submitting={submitting}
         />
       </div>
     </div>
