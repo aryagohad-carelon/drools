@@ -139,8 +139,8 @@ export default function AddRecommendationForm({ onSubmit, onCancel, submitting =
                 onClick={() => toggleCuisine(tag)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
                   selected
-                    ? 'bg-[#B5224A] text-white border-[#B5224A]'
-                    : 'bg-white text-[#2A211E] border-[#EDE0D2] hover:border-[#B5224A] hover:text-[#B5224A]'
+                    ? 'bg-[#0D1B2A] text-white border-[#0D1B2A]'
+                    : 'bg-white text-[#2A211E] border-[#EDE0D2] hover:border-[#0D1B2A] hover:text-[#0D1B2A]'
                 }`}
               >
                 {tag}
@@ -155,7 +155,7 @@ export default function AddRecommendationForm({ onSubmit, onCancel, submitting =
                 key={tag}
                 type="button"
                 onClick={() => toggleCuisine(tag)}
-                className="px-3 py-1.5 rounded-full text-sm font-medium transition-all border bg-[#B5224A] text-white border-[#B5224A] flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-full text-sm font-medium transition-all border bg-[#0D1B2A] text-white border-[#0D1B2A] flex items-center gap-1.5"
               >
                 {tag}
                 <svg className="w-3 h-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -173,13 +173,13 @@ export default function AddRecommendationForm({ onSubmit, onCancel, submitting =
             onChange={(e) => setCuisineInput(e.target.value)}
             onKeyDown={handleCuisineInputKey}
             placeholder="Add a cuisine..."
-            className="flex-1 px-3 py-2 bg-white rounded-xl border border-[#EDE0D2] text-sm text-[#2A211E] placeholder:text-[#C2AFA7] focus:outline-none focus:border-[#B5224A] focus:ring-2 focus:ring-[rgba(181,34,74,0.15)] transition-all"
+            className="flex-1 px-3 py-2 bg-white rounded-xl border border-[#EDE0D2] text-sm text-[#2A211E] placeholder:text-[#C2AFA7] focus:outline-none focus:border-[#0D1B2A] focus:ring-2 focus:ring-[rgba(13,27,42,0.15)] transition-all"
           />
           <button
             type="button"
             onClick={addCustomCuisine}
             disabled={!cuisineInput.trim()}
-            className="px-3 py-2 rounded-xl border border-[#EDE0D2] text-sm font-medium text-[#B5224A] bg-white hover:bg-[rgba(181,34,74,0.06)] hover:border-[#B5224A] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-3 py-2 rounded-xl border border-[#EDE0D2] text-sm font-medium text-[#0D1B2A] bg-white hover:bg-[rgba(13,27,42,0.06)] hover:border-[#0D1B2A] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Add
           </button>
@@ -218,12 +218,12 @@ export default function AddRecommendationForm({ onSubmit, onCancel, submitting =
           className="hidden"
         />
         {form.photo ? (
-          <div className="flex items-center gap-3 p-3 bg-[rgba(181,34,74,0.06)] rounded-2xl border border-[#B5224A]/20">
+          <div className="flex items-center gap-3 p-3 bg-[rgba(13,27,42,0.06)] rounded-2xl border border-[#0D1B2A]/20">
             <span className="text-sm text-[#2A211E] font-medium truncate flex-1">{form.photo.name}</span>
             <button
               type="button"
               onClick={() => set('photo', null)}
-              className="text-[#9B8A82] hover:text-[#B5224A] transition-colors flex-shrink-0"
+              className="text-[#9B8A82] hover:text-[#0D1B2A] transition-colors flex-shrink-0"
               aria-label="Remove photo"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -235,7 +235,7 @@ export default function AddRecommendationForm({ onSubmit, onCancel, submitting =
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full py-3 border-2 border-dashed border-[#EDE0D2] rounded-2xl text-sm text-[#9B8A82] hover:border-[#B5224A] hover:text-[#B5224A] transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 border-2 border-dashed border-[#EDE0D2] rounded-2xl text-sm text-[#9B8A82] hover:border-[#0D1B2A] hover:text-[#0D1B2A] transition-colors flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -250,7 +250,7 @@ export default function AddRecommendationForm({ onSubmit, onCancel, submitting =
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-3.5 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm hover:bg-[#9B1C3D] transition-colors shadow-sm active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full py-3.5 bg-[#0D1B2A] text-white rounded-2xl font-semibold text-sm hover:bg-[#060d15] transition-colors shadow-sm active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? 'Saving...' : 'Share Recommendation'}
         </button>
@@ -274,7 +274,7 @@ function inputClass(hasError: boolean) {
   return `w-full px-4 py-3 bg-white rounded-2xl border text-sm text-[#2A211E] placeholder:text-[#C2AFA7] focus:outline-none transition-all ${
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-100'
-      : 'border-[#EDE0D2] focus:border-[#B5224A] focus:ring-2 focus:ring-[rgba(181,34,74,0.15)]'
+      : 'border-[#EDE0D2] focus:border-[#0D1B2A] focus:ring-2 focus:ring-[rgba(13,27,42,0.15)]'
   }`
 }
 
@@ -292,7 +292,7 @@ function Field({ label, hint, error, required, children }: FieldProps) {
       <div className="flex items-baseline gap-1 mb-1.5">
         <label className="text-sm font-semibold text-[#2A211E]">
           {label}
-          {required && <span className="text-[#B5224A] ml-0.5">*</span>}
+          {required && <span className="text-[#0D1B2A] ml-0.5">*</span>}
         </label>
         {hint && <span className="text-xs text-[#9B8A82]">{hint}</span>}
       </div>

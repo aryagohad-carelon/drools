@@ -14,13 +14,13 @@ export default function SuccessState() {
       </p>
       <button
         onClick={() => navigate('/')}
-        className="w-full max-w-xs px-6 py-3.5 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm hover:bg-[#9B1C3D] transition-colors shadow-sm"
+        className="w-full max-w-xs px-6 py-3.5 bg-[#0D1B2A] text-white rounded-2xl font-semibold text-sm hover:bg-[#060d15] transition-colors shadow-sm"
       >
         View Feed
       </button>
       <button
         onClick={() => navigate('/add')}
-        className="mt-3 text-sm text-[#B5224A] font-medium"
+        className="mt-3 text-sm text-[#0D1B2A] font-medium"
       >
         Add another
       </button>

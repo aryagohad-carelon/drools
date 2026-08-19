@@ -1,5 +1,5 @@
-export const ACCENT = '#B5224A'
-export const ACCENT_BG = 'rgba(181, 34, 74, 0.09)'
+export const ACCENT = '#0D1B2A'
+export const ACCENT_BG = 'rgba(13, 27, 42, 0.09)'
 export const BG = '#FFF9F3'
 export const TEXT = '#2A211E'
 

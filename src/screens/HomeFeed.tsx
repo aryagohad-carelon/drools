@@ -42,13 +42,13 @@ export default function HomeFeed() {
       <div className="sticky top-0 z-30 bg-[#FFF9F3]/95 backdrop-blur-sm">
         <div className="flex items-center justify-between px-5 pt-14 pb-3">
           <div>
-            <span className="text-2xl font-black tracking-tight text-[#B5224A]">drools</span>
+            <span className="text-2xl font-black tracking-tight text-[#0D1B2A]">drools</span>
             <span className="text-2xl">🤤</span>
           </div>
           <button
             onClick={() => navigate('/profile')}
             aria-label="Profile"
-            className="w-9 h-9 rounded-full bg-[#EDE0D2] flex items-center justify-center text-[#B5224A] font-bold text-sm hover:bg-[#E0D0C4] transition-colors"
+            className="w-9 h-9 rounded-full bg-[#EDE0D2] flex items-center justify-center text-[#0D1B2A] font-bold text-sm hover:bg-[#E0D0C4] transition-colors"
           >
             A
           </button>
@@ -75,7 +75,7 @@ export default function HomeFeed() {
               </p>
               <button
                 onClick={() => navigate('/add')}
-                className="flex items-center gap-2 px-5 py-3 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm hover:bg-[#9B1C3D] transition-colors shadow-sm active:scale-[0.98]"
+                className="flex items-center gap-2 px-5 py-3 bg-[#0D1B2A] text-white rounded-2xl font-semibold text-sm hover:bg-[#060d15] transition-colors shadow-sm active:scale-[0.98]"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -131,7 +131,7 @@ export default function HomeFeed() {
             {isFiltered && (
               <button
                 onClick={() => { setSearchQuery(''); setActiveCuisine('All'); setActiveArea('') }}
-                className="text-xs text-[#B5224A] font-medium"
+                className="text-xs text-[#0D1B2A] font-medium"
               >
                 Clear filters
               </button>

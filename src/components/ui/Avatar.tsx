@@ -41,7 +41,7 @@ const LETTER_COLORS: Record<string, { bg: string; text: string }> = {
   Z: { bg: '#E8EAF6', text: '#283593' },
 }
 
-const DEFAULT_COLOR = { bg: '#EDE0D2', text: '#B5224A' }
+const DEFAULT_COLOR = { bg: '#EDE0D2', text: '#0D1B2A' }
 
 function getLetterColor(name: string) {
   const letter = name.trim().charAt(0).toUpperCase()
