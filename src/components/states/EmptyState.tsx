@@ -22,7 +22,7 @@ export default function EmptyState({
       <p className="text-sm text-[#9B8A82] leading-relaxed max-w-xs mb-8">{subheading}</p>
       <button
         onClick={() => navigate(ctaPath)}
-        className="px-6 py-3 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm hover:bg-[#9B1C3D] transition-colors shadow-sm"
+        className="px-6 py-3 bg-[#0D1B2A] text-white rounded-2xl font-semibold text-sm hover:bg-[#060d15] transition-colors shadow-sm"
       >
         {ctaLabel}
       </button>

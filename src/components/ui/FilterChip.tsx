@@ -12,8 +12,8 @@ export default function FilterChip({ label, active, onClick }: FilterChipProps) 
         flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-150
         ${
           active
-            ? 'bg-[#B5224A] text-white shadow-sm'
-            : 'bg-white text-[#2A211E] border border-[#EDE0D2] hover:border-[#B5224A] hover:text-[#B5224A]'
+            ? 'bg-[#0D1B2A] text-white shadow-sm'
+            : 'bg-white text-[#2A211E] border border-[#EDE0D2] hover:border-[#0D1B2A] hover:text-[#0D1B2A]'
         }
       `}
     >

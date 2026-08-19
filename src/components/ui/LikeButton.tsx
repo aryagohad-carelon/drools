@@ -34,7 +34,7 @@ export default function LikeButton({ count, liked, onToggle, className = '' }: L
       </span>
       <span
         className={`text-sm font-semibold tabular-nums transition-colors ${
-          liked ? 'text-[#B5224A]' : 'text-[#9B8A82]'
+          liked ? 'text-[#0D1B2A]' : 'text-[#9B8A82]'
         }`}
       >
         {count}

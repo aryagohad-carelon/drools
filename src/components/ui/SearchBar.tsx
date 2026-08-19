@@ -32,7 +32,7 @@ export default function SearchBar({
         onFocus={onFocus}
         autoFocus={autoFocus}
         placeholder={placeholder}
-        className="w-full pl-10 pr-10 py-3 bg-white rounded-2xl border border-[#EDE0D2] text-sm text-[#2A211E] placeholder:text-[#9B8A82] focus:outline-none focus:border-[#B5224A] focus:ring-2 focus:ring-[rgba(181,34,74,0.15)] transition-all"
+        className="w-full pl-10 pr-10 py-3 bg-white rounded-2xl border border-[#EDE0D2] text-sm text-[#2A211E] placeholder:text-[#9B8A82] focus:outline-none focus:border-[#0D1B2A] focus:ring-2 focus:ring-[rgba(13,27,42,0.15)] transition-all"
       />
       {value && (
         <button

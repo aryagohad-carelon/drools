@@ -25,7 +25,7 @@ export default function RestaurantDetail() {
         <p className="text-sm text-[#9B8A82] mb-6">This gem may have been moved or removed.</p>
         <button
           onClick={() => navigate('/')}
-          className="px-6 py-3 bg-[#B5224A] text-white rounded-2xl font-semibold text-sm"
+          className="px-6 py-3 bg-[#0D1B2A] text-white rounded-2xl font-semibold text-sm"
         >
           Back to Feed
         </button>
@@ -89,11 +89,11 @@ export default function RestaurantDetail() {
         <div className="bg-white rounded-3xl p-4 border border-[#EDE0D2]/60 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-semibold text-[#2A211E]">Community popularity</span>
-            <span className="text-sm font-bold text-[#B5224A]">{popularityScore}%</span>
+            <span className="text-sm font-bold text-[#0D1B2A]">{popularityScore}%</span>
           </div>
           <div className="h-2 bg-[#EDE0D2] rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#B5224A] rounded-full transition-all duration-700"
+              className="h-full bg-[#0D1B2A] rounded-full transition-all duration-700"
               style={{ width: `${popularityScore}%` }}
             />
           </div>
@@ -174,7 +174,7 @@ export default function RestaurantDetail() {
         <div className="max-w-lg mx-auto pointer-events-auto">
           <button
             onClick={() => navigate('/add')}
-            className="w-full py-4 bg-[#B5224A] text-white rounded-2xl font-bold text-sm shadow-xl hover:bg-[#9B1C3D] transition-colors active:scale-[0.98]"
+            className="w-full py-4 bg-[#0D1B2A] text-white rounded-2xl font-bold text-sm shadow-xl hover:bg-[#060d15] transition-colors active:scale-[0.98]"
           >
             Add Your Recommendation
           </button>
